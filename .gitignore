@@ -1,0 +1,4 @@
+/vendor/
+/config/mail.local.php
+config.bat
+node_modules

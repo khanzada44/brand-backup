@@ -1,0 +1,67 @@
+Options -Indexes -MultiViews
+DirectoryIndex index.php
+
+RewriteEngine On
+
+# Internal directories are PHP include paths, never public routes.
+RewriteRule ^(?:config|server|components|docs|tests|vendor)(?:/|$) - [F,L,NC]
+RewriteRule (^|/)\.(?!well-known(?:/|$)) - [F,L,NC]
+
+# Enforce the production origin without redirecting localhost development.
+RewriteCond %{HTTP_HOST} ^(?:www\.)?americanauthors\.org(?::\d+)?$ [NC]
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} ^www\.americanauthors\.org(?::\d+)?$ [NC]
+RewriteRule ^ https://americanauthors.org%{REQUEST_URI} [R=308,L]
+
+# Redirect only browser requests for PHP pages, not internal rewrites or APIs.
+RewriteCond %{THE_REQUEST} \s/+[^\s?]*\.php(?:[?\s]) [NC]
+RewriteCond %{REQUEST_URI} ^(.*/)index\.php$
+RewriteRule ^index\.php$ %1 [R=308,L]
+RewriteCond %{THE_REQUEST} \s/+[^\s?]*\.php(?:[?\s]) [NC]
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_URI} ^(.*/)[^/]+\.php$
+RewriteRule ^([a-z0-9-]+)\.php$ %1$1 [R=308,L]
+
+# Page routes have no trailing slash; real asset directories are unaffected.
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} ^(.*/)[^/]+/$
+RewriteRule ^([a-z0-9-]+)/$ %1$1 [R=308,L]
+RewriteCond %{REQUEST_URI} ^(.*/)index$
+RewriteRule ^index$ %1 [R=308,L]
+
+# Existing root pages are served internally without exposing the PHP suffix.
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([a-z0-9-]+)$ $1.php [END]
+
+<FilesMatch "(?i)(^composer\.(json|lock)$|\.(?:bak|old|orig|save|sql|ini|log|env|zip|tar|gz)$|~$)">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header unset X-Powered-By
+    Header always unset X-Powered-By
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+<IfModule php_module>
+    php_flag display_errors Off
+    php_flag log_errors On
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 7 days"
+    ExpiresByType application/javascript "access plus 7 days"
+    ExpiresByType image/webp "access plus 30 days"
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>

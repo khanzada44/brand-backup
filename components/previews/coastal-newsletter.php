@@ -1,0 +1,1 @@
+<section class="cw-news"><div><p class="cw-h3">Letters from the coast</p><p class="cw-small">A short monthly note: new writing, events and first looks at upcoming books.</p></div><span class="cw-field">your@email.com</span><span class="cw-btn">Subscribe</span></section>

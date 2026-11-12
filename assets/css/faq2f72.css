@@ -1,0 +1,15 @@
+/* FAQ page: the homepage FAQ section on its own page, plus a short masthead rule. */
+.page-faq { background: var(--ivory); }
+.faq-page__top { padding: 140px 0 0; background: var(--ivory); }
+.faq-page__crumbs { margin-bottom: 30px; }
+.faq-page__crumbs ol { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: 0.76rem; }
+.faq-page__crumbs li { display: inline-flex; gap: 6px; color: var(--on-light-3); }
+.faq-page__crumbs li + li::before { content: "/"; color: rgba(21, 23, 28, 0.3); }
+.faq-page__crumbs a { color: var(--on-light-2); text-decoration: none; }
+.faq-page__crumbs [aria-current] { color: var(--bronze-ink); }
+.faq-page__rule { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 14px 0; border-top: 2px solid var(--ink); border-bottom: 1px solid rgba(21, 23, 28, 0.2); font-size: 0.64rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink); }
+.faq-page__rule i { font-style: normal; color: var(--bronze); margin: 0 6px; }
+.faq-page { padding-top: clamp(50px, 6vw, 90px); }
+.faq-page .faq-page__title { margin: 0; }
+.faq-cta__btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+@media (max-width: 640px) { .faq-page__top { padding-top: 112px; } .faq-page__rule span:nth-child(2) { display: none; } }
